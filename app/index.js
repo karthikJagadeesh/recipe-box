@@ -15,13 +15,21 @@ class Button extends Component {
 
 class RecipeDescription extends Component {
   render() {
+    const styles = {
+      borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
+      paddingRight: '10px'
+    }
+
+    const ingredients = this.props.ingredients.map((ingredient, index) => <p style={styles} key={ingredient}>{ingredient}</p>)
 
     return (
-      <div style={{borderBottom: '2px solid rgba(0, 0, 0, 0.1)', textAlign: 'left'}}>
-        <ul>
-          <li>Apple</li>
-          <li>Orange</li>
-        </ul>
+      <div style={{boxShadow: '0 2px 2px rgba(0, 0, 0, 0.3)', textAlign: 'left', padding: '20px'}}>
+        <h3 style={{textAlign: 'center', borderBottom: '1px solid rgba(0, 0, 0, 0.1)', paddingBottom: '10px'}}>Ingredients</h3>
+        { ingredients }
+        <div style={{padding: '15px 0px'}}>
+          <button className="deleteEdit">Delete</button>
+          <button className="deleteEdit">Edit</button>
+        </div>
       </div>
     )
   }
@@ -44,24 +52,37 @@ class Recipe extends Component {
   };
 
   render() {
-    return (
-      <div>
+    const recipeName = this.props.recipes.map((recipe, index) => (
+      <div key={recipe.name}>
         <div className="recipe" onClick={this.showDescription}>
-          Fruit Salad
+          { recipe.name }
         </div>
-        { this.state.show ? this.props.children : undefined }
+        <RecipeDescription ingredients={recipe.ingredients}/>
       </div>
-    )
+    ))
+    return <div> { recipeName } </div>
   }
 }
 
 class RecipeBox extends Component {
+  constructor(props, context) {
+    super(props, context)
+    this.state = {
+      recipes: [{
+        name: 'Fruit Salad',
+        ingredients: ['Apple', 'Orange', 'Pineapple', 'Honey', 'Banana', 'Almonds']
+      },
+      {
+        name: 'Milkshake',
+        ingredients: ['Milk', 'Sugar', 'Water', 'Powder']
+      }]
+    }
+  }
+
   render() {
     return (
       <div className="recipeBox">
-        <Recipe>
-          <RecipeDescription/>
-        </Recipe>
+        <Recipe recipes={this.state.recipes} />
       </div>
     )
   }

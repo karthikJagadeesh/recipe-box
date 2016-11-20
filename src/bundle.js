@@ -122,22 +122,40 @@
 	  _createClass(RecipeDescription, [{
 	    key: 'render',
 	    value: function render() {
+	      var styles = {
+	        borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
+	        paddingRight: '10px'
+	      };
+
+	      var ingredients = this.props.ingredients.map(function (ingredient, index) {
+	        return _react2.default.createElement(
+	          'p',
+	          { style: styles, key: ingredient },
+	          ingredient
+	        );
+	      });
 
 	      return _react2.default.createElement(
 	        'div',
-	        { style: { borderBottom: '2px solid rgba(0, 0, 0, 0.1)', textAlign: 'left' } },
+	        { style: { boxShadow: '0 2px 2px rgba(0, 0, 0, 0.3)', textAlign: 'left', padding: '20px' } },
 	        _react2.default.createElement(
-	          'ul',
-	          null,
+	          'h3',
+	          { style: { textAlign: 'center', borderBottom: '1px solid rgba(0, 0, 0, 0.1)', paddingBottom: '10px' } },
+	          'Ingredients'
+	        ),
+	        ingredients,
+	        _react2.default.createElement(
+	          'div',
+	          { style: { padding: '15px 0px' } },
 	          _react2.default.createElement(
-	            'li',
-	            null,
-	            'Apple'
+	            'button',
+	            { className: 'deleteEdit' },
+	            'Delete'
 	          ),
 	          _react2.default.createElement(
-	            'li',
-	            null,
-	            'Orange'
+	            'button',
+	            { className: 'deleteEdit' },
+	            'Edit'
 	          )
 	        )
 	      );
@@ -173,15 +191,26 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var _this5 = this;
+
+	      var recipeName = this.props.recipes.map(function (recipe, index) {
+	        return _react2.default.createElement(
+	          'div',
+	          { key: recipe.name },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'recipe', onClick: _this5.showDescription },
+	            recipe.name
+	          ),
+	          _react2.default.createElement(RecipeDescription, { ingredients: recipe.ingredients })
+	        );
+	      });
 	      return _react2.default.createElement(
 	        'div',
 	        null,
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'recipe', onClick: this.showDescription },
-	          'Fruit Salad'
-	        ),
-	        this.state.show ? this.props.children : undefined
+	        ' ',
+	        recipeName,
+	        ' '
 	      );
 	    }
 	  }]);
@@ -192,10 +221,21 @@
 	var RecipeBox = function (_Component5) {
 	  _inherits(RecipeBox, _Component5);
 
-	  function RecipeBox() {
+	  function RecipeBox(props, context) {
 	    _classCallCheck(this, RecipeBox);
 
-	    return _possibleConstructorReturn(this, (RecipeBox.__proto__ || Object.getPrototypeOf(RecipeBox)).apply(this, arguments));
+	    var _this6 = _possibleConstructorReturn(this, (RecipeBox.__proto__ || Object.getPrototypeOf(RecipeBox)).call(this, props, context));
+
+	    _this6.state = {
+	      recipes: [{
+	        name: 'Fruit Salad',
+	        ingredients: ['Apple', 'Orange', 'Pineapple', 'Honey', 'Banana', 'Almonds']
+	      }, {
+	        name: 'Milkshake',
+	        ingredients: ['Milk', 'Sugar', 'Water', 'Powder']
+	      }]
+	    };
+	    return _this6;
 	  }
 
 	  _createClass(RecipeBox, [{
@@ -204,11 +244,7 @@
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'recipeBox' },
-	        _react2.default.createElement(
-	          Recipe,
-	          null,
-	          _react2.default.createElement(RecipeDescription, null)
-	        )
+	        _react2.default.createElement(Recipe, { recipes: this.state.recipes })
 	      );
 	    }
 	  }]);

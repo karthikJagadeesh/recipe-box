@@ -14,11 +14,12 @@
         text-align: center;
       }
       .heading {
-        letter-spacing: 3px;
+        letter-spacing: 5px;
         color: #D33257;
         margin-bottom: 50px;
         padding-bottom: 10px;
         border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        text-shadow: 1px 2px 0px rgba(0, 0, 0, 0.3);
       }
       .button {
         padding: 10px;
@@ -54,9 +55,29 @@
         padding: 20px;
         background: rgba(246, 205, 97, 0.3);
         cursor: pointer;
+        user-select: none;
+        box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
       }
       .recipe:hover {
         background: rgba(246, 205, 97, 0.5);
+      }
+      .deleteEdit {
+        padding: 10px;
+        margin-right: 10px;
+        background: #D33257;
+        color: #fff;
+        outline: none;
+        border-radius: 50px;
+        border: none;
+        font-size: 15px;
+        letter-spacing: 1px;
+        box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2);
+      }
+      .deleteEdit:hover {
+        background: #913349;
+      }
+      .deleteEdit:active {
+        box-shadow: none;
       }
 
     </style>
