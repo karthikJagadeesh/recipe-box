@@ -8,8 +8,17 @@ class Heading extends Component {
 }
 
 class Button extends Component {
+  constructor(props, context) {
+    super(props, context)
+    this.showModal = this.showModal.bind(this)
+  }
+
+  showModal() {
+
+  }
+
   render() {
-    return <button className="button">Add Recipe <i className="fa fa-plus"></i></button>
+    return <button onClick={this.showModal} className="button">Add Recipe <i className="fa fa-plus"></i></button>
   }
 }
 
@@ -97,12 +106,41 @@ class RecipeBox extends Component {
   }
 }
 
+class Modal extends Component {
+  render() {
+    return (
+      <div id="modal" className="modal">
+        <div className="modalContent">
+
+          <div className="modalHeader">
+            <h3>Add a Recipe <span class="close"><i className="fa fa-times"></i></span></h3>
+          </div>
+
+          <div className="modalBody">
+            <label>Recipe</label>
+            <div className="modalInput"><input className="inputBox" type="text" placeholder="Recipe Name" /></div>
+            <label>Ingredients</label>
+            <div className="modalInput"><textarea className="inputBox">Enter Ingredients seperated by commas</textarea></div>
+          </div>
+
+          <div className="modalFooter">
+            <button className="modalButton">Add Recipe</button>
+            <button className="modalButton">Close</button>
+          </div>
+
+        </div>
+      </div>
+    )
+  }
+}
+
 class Container extends Component {
   render() {
     return (
       <div className="container">
         <RecipeBox/>
         <Button/>
+        <Modal/>
       </div>
     )
   }

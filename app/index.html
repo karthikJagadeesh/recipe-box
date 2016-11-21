@@ -96,7 +96,58 @@
         display: none;
         margin-bottom: 10px;
       }
-
+      .modal {
+        background: rgba(0, 0, 0, 0.4);
+        height: 100%;
+        width: 100%;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        position: fixed;
+      }
+      .modalContent {
+        background: white;
+        padding: 10px;
+        box-shadow: 0px 5px 8px rgba(0, 0, 0, 0.5);
+        border-radius: 5px;
+        width: 80%;
+        margin: 8% auto;
+      }
+      .modalHeader {
+        padding-left: 10px;
+        text-align: left;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+      }
+      .fa-times {
+        float: right;
+      }
+      .modalBody {
+        padding: 20px 10px;
+        text-align: left;
+      }
+      .modalInput {
+        padding: 5px 0px 10px 0px;
+      }
+      .inputBox {
+        padding: 10px 20px;
+        font-family: 'Karla', helvetica, sans-serif;
+        font-size: 16px;
+        width: 60%;
+        color: rgba(0, 0, 0, 0.5);
+      }
+      .modalButton {
+        padding: 10px;
+        border-radius: 5px;
+        border: none;
+        outline: none;
+        margin-left: 10px;
+        font-size: 14px;
+      }
+      .modalFooter {
+        border-top: 1px solid rgba(0, 0, 0, 0.2);
+        padding: 20px 0 10px 0px;
+        text-align: left;
+      }
     </style>
   </head>
   <body>
