@@ -126,6 +126,18 @@
 	        borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
 	        paddingRight: '10px'
 	      };
+	      var displayStyle = {
+	        boxShadow: '0 2px 2px rgba(0, 0, 0, 0.3)',
+	        textAlign: 'left',
+	        padding: '20px',
+	        display: 'block'
+	      };
+	      var hideStyle = {
+	        boxShadow: '0 2px 2px rgba(0, 0, 0, 0.3)',
+	        textAlign: 'left',
+	        padding: '20px',
+	        display: 'none'
+	      };
 
 	      var ingredients = this.props.ingredients.map(function (ingredient, index) {
 	        return _react2.default.createElement(
@@ -137,7 +149,7 @@
 
 	      return _react2.default.createElement(
 	        'div',
-	        { style: { boxShadow: '0 2px 2px rgba(0, 0, 0, 0.3)', textAlign: 'left', padding: '20px' } },
+	        { style: displayStyle },
 	        _react2.default.createElement(
 	          'h3',
 	          { style: { textAlign: 'center', borderBottom: '1px solid rgba(0, 0, 0, 0.1)', paddingBottom: '10px' } },
@@ -173,21 +185,15 @@
 
 	    var _this4 = _possibleConstructorReturn(this, (Recipe.__proto__ || Object.getPrototypeOf(Recipe)).call(this, props, context));
 
-	    _this4.state = {
-	      show: false
-	    };
+	    _this4.state = {};
 	    _this4.showDescription = _this4.showDescription.bind(_this4);
+	    var visible = false;
 	    return _this4;
 	  }
 
 	  _createClass(Recipe, [{
 	    key: 'showDescription',
-	    value: function showDescription() {
-	      var self = this.state;
-	      this.setState({
-	        show: !self.show
-	      });
-	    }
+	    value: function showDescription() {}
 	  }, {
 	    key: 'render',
 	    value: function render() {

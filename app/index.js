@@ -19,11 +19,23 @@ class RecipeDescription extends Component {
       borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
       paddingRight: '10px'
     }
+    const displayStyle = {
+      boxShadow: '0 2px 2px rgba(0, 0, 0, 0.3)',
+      textAlign: 'left',
+      padding: '20px',
+      display: 'block'
+    }
+    const hideStyle = {
+      boxShadow: '0 2px 2px rgba(0, 0, 0, 0.3)',
+      textAlign: 'left',
+      padding: '20px',
+      display: 'none'
+    }
 
     const ingredients = this.props.ingredients.map((ingredient, index) => <p style={styles} key={ingredient}>{ingredient}</p>)
 
     return (
-      <div style={{boxShadow: '0 2px 2px rgba(0, 0, 0, 0.3)', textAlign: 'left', padding: '20px'}}>
+      <div style={ displayStyle }>
         <h3 style={{textAlign: 'center', borderBottom: '1px solid rgba(0, 0, 0, 0.1)', paddingBottom: '10px'}}>Ingredients</h3>
         { ingredients }
         <div style={{padding: '15px 0px'}}>
@@ -39,16 +51,14 @@ class Recipe extends Component {
   constructor(props, context) {
     super(props, context)
     this.state = {
-      show: false
+
     }
     this.showDescription = this.showDescription.bind(this)
+    let visible = false
   }
 
   showDescription() {
-    const self = this.state
-    this.setState({
-      show: !self.show
-    })
+    if (!visible)
   };
 
   render() {
