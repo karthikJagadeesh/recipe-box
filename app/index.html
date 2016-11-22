@@ -65,6 +65,7 @@
         background: rgba(246, 205, 97, 0.5);
       }
       .deleteEdit {
+        cursor: pointer;
         padding: 10px;
         margin-right: 10px;
         background: #D33257;
@@ -97,13 +98,14 @@
         margin-bottom: 10px;
       }
       .modal {
-        background: rgba(0, 0, 0, 0.4);
+        background: rgba(0, 0, 0, 0.6);
         height: 100%;
         width: 100%;
         z-index: 1;
         top: 0;
         left: 0;
         position: fixed;
+        display: none;
       }
       .modalContent {
         background: white;
@@ -111,7 +113,7 @@
         box-shadow: 0px 5px 8px rgba(0, 0, 0, 0.5);
         border-radius: 5px;
         width: 80%;
-        margin: 8% auto;
+        margin: 6% auto;
       }
       .modalHeader {
         padding-left: 10px;
@@ -134,6 +136,7 @@
         font-size: 16px;
         width: 60%;
         color: rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(0, 0, 0, 0.2);
       }
       .modalButton {
         padding: 10px;
@@ -143,10 +146,41 @@
         margin-left: 10px;
         font-size: 14px;
       }
+      .addRecipeButton {
+        background: linear-gradient(to right, #64DDBB, #00B5B5);
+        color: #eee;
+        box-shadow: 2px 3px 0px rgba(0, 0, 0, 0.3);
+        cursor: pointer;
+      }
+      .addRecipeButton:hover {
+        background: linear-gradient(to right, #4BA68C, #007575);
+      }
+      .addRecipeButton:active {
+        box-shadow: none;
+        background: linear-gradient(to right, #4BA68C, #007575);
+      }
+      .closeButton {
+        background: #D33257;
+        box-shadow: 2px 3px 0px rgba(0, 0, 0, 0.3);
+        color: #eee;
+        cursor: pointer;
+      }
+      .closeButton:hover {
+        background: #913349;
+      }
+      .closeButton:active {
+        box-shadow: none;
+      }
       .modalFooter {
         border-top: 1px solid rgba(0, 0, 0, 0.2);
         padding: 20px 0 10px 0px;
         text-align: left;
+      }
+      .recipeInputBox {
+        margin-bottom: 10px;
+      }
+      .close {
+        cursor: pointer;
       }
     </style>
   </head>

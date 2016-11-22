@@ -14,7 +14,8 @@ class Button extends Component {
   }
 
   showModal() {
-
+    let modal = document.getElementById('modal')
+    modal.style.display = 'block'
   }
 
   render() {
@@ -107,25 +108,40 @@ class RecipeBox extends Component {
 }
 
 class Modal extends Component {
+  constructor(props, context) {
+    super(props, context)
+    this.closeModal = this.closeModal.bind(this)
+    this.showModal = this.showModal.bind(this)
+    let modal = document.getElementById('modal')
+  }
+
+  closeModal() {
+    modal.style.display = 'none'
+  }
+
+  showModal() {
+    modal.style.display = 'block'
+  }
+
   render() {
     return (
       <div id="modal" className="modal">
-        <div className="modalContent">
+        <div id="modalContent" className="modalContent">
 
           <div className="modalHeader">
-            <h3>Add a Recipe <span class="close"><i className="fa fa-times"></i></span></h3>
+            <h3>Add a Recipe <span onClick={this.closeModal} className="close"><i className="fa fa-times"></i></span></h3>
           </div>
 
           <div className="modalBody">
             <label>Recipe</label>
-            <div className="modalInput"><input className="inputBox" type="text" placeholder="Recipe Name" /></div>
+            <div className="modalInput recipeInputBox"><input className="inputBox" type="text" placeholder="Recipe Name" /></div>
             <label>Ingredients</label>
-            <div className="modalInput"><textarea className="inputBox">Enter Ingredients seperated by commas</textarea></div>
+            <div className="modalInput"><textarea className="inputBox" placeholder="Enter Ingredients seperated by commas"></textarea></div>
           </div>
 
           <div className="modalFooter">
-            <button className="modalButton">Add Recipe</button>
-            <button className="modalButton">Close</button>
+            <button className="modalButton addRecipeButton">Add Recipe</button>
+            <button className="modalButton closeButton" onClick={this.closeModal}>Close</button>
           </div>
 
         </div>
