@@ -38,7 +38,7 @@ class RecipeDescription extends Component {
     }
 
     displayStyle.display = this.props.showIngredients ? 'block' : 'none'
-    const ingredients = this.props.ingredients.map((ingredient, index) => <p style={styles} key={ingredient}>{ingredient}</p>)
+    let ingredients = this.props.ingredients.map((ingredient, index) => <p style={styles} key={ingredient}>{ingredient}</p>)
 
     return (
       <div style={ displayStyle }>
@@ -67,7 +67,7 @@ class Recipe extends Component {
   };
 
   render() {
-    const recipeName = this.props.recipes.map((recipe, index) => (
+    let recipeName = this.props.recipes.map((recipe, index) => (
       <div key={index}>
         <div data-id={index} className="recipe" onClick={this.showDescription}>
           { recipe.name }
@@ -94,14 +94,51 @@ class RecipeBox extends Component {
       {
         name: 'Lemon Juice',
         ingredients: ['Lemon', 'Sugar', 'Water']
-      }]
+      }],
+      recipeName: '',
+      ingredients: ''
     }
+
+    this.addNewRecipe = this.addNewRecipe.bind(this)
+    this.handleRecipeNameChange = this.handleRecipeNameChange.bind(this)
+    this.handleIngredientsChange = this.handleIngredientsChange.bind(this)
+  }
+
+  handleRecipeNameChange(value) {
+    this.setState({
+      recipeName: value
+    })
+  }
+
+  handleIngredientsChange(value) {
+    this.setState({
+      ingredients: value
+    })
+  }
+
+  addNewRecipe() {
+    let recipeIngredients = this.state.ingredients.split(',').map(ingredient => ingredient.trim())
+    let recipeName = this.state.recipeName.trim()
+    this.setState({
+      recipes: this.state.recipes.concat({
+        name: recipeName,
+        ingredients: recipeIngredients
+      }),
+      recipeName: '',
+      ingredients: ''
+    })
   }
 
   render() {
     return (
       <div className="recipeBox">
         <Recipe recipes={this.state.recipes} />
+        <Modal
+          handleRecipeNameChange={this.handleRecipeNameChange}
+          handleIngredientsChange={this.handleIngredientsChange}
+          addNewRecipe={this.addNewRecipe}
+          recipeName={this.state.recipeName}
+          recipeIngredients={this.state.ingredients}/>
       </div>
     )
   }
@@ -110,8 +147,11 @@ class RecipeBox extends Component {
 class Modal extends Component {
   constructor(props, context) {
     super(props, context)
+
     this.closeModal = this.closeModal.bind(this)
-    this.showModal = this.showModal.bind(this)
+    this.handleIngredientsChange = this.handleIngredientsChange.bind(this)
+    this.handleRecipeNameChange = this.handleRecipeNameChange.bind(this)
+
     let modal = document.getElementById('modal')
   }
 
@@ -119,8 +159,14 @@ class Modal extends Component {
     modal.style.display = 'none'
   }
 
-  showModal() {
-    modal.style.display = 'block'
+  handleRecipeNameChange() {
+    const name = this.refs.recipeName.value
+    this.props.handleRecipeNameChange(name)
+  }
+
+  handleIngredientsChange() {
+    const ingredients = this.refs.ingredients.value
+    this.props.handleIngredientsChange(ingredients)
   }
 
   render() {
@@ -134,13 +180,13 @@ class Modal extends Component {
 
           <div className="modalBody">
             <label>Recipe</label>
-            <div className="modalInput recipeInputBox"><input className="inputBox" type="text" placeholder="Recipe Name" /></div>
+            <div className="modalInput recipeInputBox"><input value={this.props.recipeName} ref="recipeName" onChange={this.handleRecipeNameChange} className="inputBox" type="text" placeholder="Recipe Name" /></div>
             <label>Ingredients</label>
-            <div className="modalInput"><textarea className="inputBox" placeholder="Enter Ingredients seperated by commas"></textarea></div>
+            <div className="modalInput"><textarea value={this.props.recipeIngredients} ref="ingredients" onChange={this.handleIngredientsChange} className="inputBox" placeholder="Enter Ingredients seperated by commas"></textarea></div>
           </div>
 
           <div className="modalFooter">
-            <button className="modalButton addRecipeButton">Add Recipe</button>
+            <button className="modalButton addRecipeButton" onClick={this.props.addNewRecipe}>Add Recipe</button>
             <button className="modalButton closeButton" onClick={this.closeModal}>Close</button>
           </div>
 
@@ -151,12 +197,16 @@ class Modal extends Component {
 }
 
 class Container extends Component {
+  constructor(props, context) {
+    super(props, context)
+
+  }
+
   render() {
     return (
       <div className="container">
         <RecipeBox/>
         <Button/>
-        <Modal/>
       </div>
     )
   }
