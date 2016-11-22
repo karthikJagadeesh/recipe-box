@@ -127,6 +127,8 @@ class RecipeBox extends Component {
       recipeName: '',
       ingredients: ''
     })
+
+    document.getElementById('modal').style.display = 'none'
   }
 
   render() {
