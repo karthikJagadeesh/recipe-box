@@ -27,10 +27,15 @@ class RecipeDescription extends Component {
   constructor(props, context) {
     super(props, context)
     this.handleDeleteClick = this.handleDeleteClick.bind(this)
+    this.handleEditClick = this.handleEditClick.bind(this)
   }
 
   handleDeleteClick(e) {
     this.props.removeRecipe(e.currentTarget.dataset.id)
+  }
+
+  handleEditClick(e) {
+    this.props.editRecipe(e.currentTarget.dataset.id)
   }
 
   render() {
@@ -55,7 +60,7 @@ class RecipeDescription extends Component {
         { ingredients }
         <div style={{padding: '15px 0px'}}>
           <button className="deleteEdit" data-id={this.props.id} onClick={this.handleDeleteClick}>Delete</button>
-          <button className="deleteEdit">Edit</button>
+          <button className="deleteEdit" data-id={this.props.id} onClick={this.handleEditClick}>Edit</button>
         </div>
       </div>
     )
@@ -70,6 +75,7 @@ class Recipe extends Component {
     }
     this.showDescription = this.showDescription.bind(this)
     this.removeRecipe = this.removeRecipe.bind(this)
+    this.editRecipe = this.editRecipe.bind(this)
   }
 
   showDescription(event) {
@@ -81,6 +87,10 @@ class Recipe extends Component {
     this.props.afterDeleteRecipes(recipes)
   }
 
+  editRecipe(id) {
+    this.props.editRecipe(id)
+  }
+
   render() {
     let recipeName = this.props.recipes.map((recipe, index) => (
       <div key={index}>
@@ -88,6 +98,7 @@ class Recipe extends Component {
           { recipe.name }
         </div>
         <RecipeDescription
+          editRecipe={this.editRecipe}
           id={this.state.id}
           showIngredients={(this.state.id === String(index)) ? true : false}
           ingredients={recipe.ingredients}
@@ -115,13 +126,16 @@ class RecipeBox extends Component {
         ingredients: ['Lemon', 'Sugar', 'Water']
       }],
       recipeName: '',
-      ingredients: ''
+      ingredients: '',
+      status: true,
+      recipeID: ''
     }
 
     this.addNewRecipe = this.addNewRecipe.bind(this)
     this.handleRecipeNameChange = this.handleRecipeNameChange.bind(this)
     this.handleIngredientsChange = this.handleIngredientsChange.bind(this)
     this.afterDeleteRecipes = this.afterDeleteRecipes.bind(this)
+    this.editRecipe = this.editRecipe.bind(this)
   }
 
   handleRecipeNameChange(value) {
@@ -142,17 +156,52 @@ class RecipeBox extends Component {
     })
   }
 
+  editRecipe(id) {
+    const item = this.state.recipes.filter((recipe, index) => index === Number(id) )[0]
+    document.getElementById('modal').style.display = 'block'
+    this.setState({
+      recipeName: item.name,
+      ingredients: item.ingredients.join(', '),
+      status: false,
+      recipeID: id
+    })
+
+  }
+
   addNewRecipe() {
     let recipeIngredients = this.state.ingredients.split(',').map(ingredient => ingredient.trim())
     let recipeName = this.state.recipeName.trim()
-    this.setState({
-      recipes: this.state.recipes.concat({
-        name: recipeName,
-        ingredients: recipeIngredients
-      }),
-      recipeName: '',
-      ingredients: ''
-    })
+
+    if (this.state.status) {
+      this.setState({
+        recipes: this.state.recipes.concat({
+          name: recipeName,
+          ingredients: recipeIngredients
+        }),
+        recipeName: '',
+        ingredients: ''
+      })
+    }
+    else {
+      let newRecipes = this.state.recipes.map((recipe, index) => {
+        if (index === Number(this.state.recipeID))
+          return {
+            name: recipeName,
+            ingredients: recipeIngredients
+          }
+        else
+          return recipe
+      })
+
+      console.log(newRecipes)
+
+      this.setState({
+        status: true,
+        recipes: newRecipes,
+        recipeName: '',
+        ingredients: ''
+      })
+    }
 
     document.getElementById('modal').style.display = 'none'
   }
@@ -160,8 +209,9 @@ class RecipeBox extends Component {
   render() {
     return (
       <div className="recipeBox">
-        <Recipe afterDeleteRecipes={this.afterDeleteRecipes} recipes={this.state.recipes} />
+        <Recipe editRecipe={this.editRecipe} afterDeleteRecipes={this.afterDeleteRecipes} recipes={this.state.recipes} />
         <Modal
+          status={this.state.status}
           handleRecipeNameChange={this.handleRecipeNameChange}
           handleIngredientsChange={this.handleIngredientsChange}
           addNewRecipe={this.addNewRecipe}
@@ -180,30 +230,33 @@ class Modal extends Component {
     this.handleIngredientsChange = this.handleIngredientsChange.bind(this)
     this.handleRecipeNameChange = this.handleRecipeNameChange.bind(this)
 
-    let modal = document.getElementById('modal')
   }
 
   closeModal() {
+    let modal = document.getElementById('modal')
     modal.style.display = 'none'
   }
 
   handleRecipeNameChange() {
-    const name = this.refs.recipeName.value
+    let name = this.refs.recipeName.value
     this.props.handleRecipeNameChange(name)
   }
 
   handleIngredientsChange() {
-    const ingredients = this.refs.ingredients.value
+    let ingredients = this.refs.ingredients.value
     this.props.handleIngredientsChange(ingredients)
   }
 
   render() {
+    let modalName = this.props.status ? 'Add a Recipe' : 'Edit Recipe'
+    let modalButton = this.props.status ? 'Add Recipe' : 'Edit Recipe'
+
     return (
       <div id="modal" className="modal">
         <div id="modalContent" className="modalContent">
 
           <div className="modalHeader">
-            <h3>Add a Recipe <span onClick={this.closeModal} className="close"><i className="fa fa-times"></i></span></h3>
+            <h3>{ modalName }<span onClick={this.closeModal} className="close"><i className="fa fa-times"></i></span></h3>
           </div>
 
           <div className="modalBody">
@@ -214,7 +267,7 @@ class Modal extends Component {
           </div>
 
           <div className="modalFooter">
-            <button className="modalButton addRecipeButton" onClick={this.props.addNewRecipe}>Add Recipe</button>
+            <button className="modalButton addRecipeButton" onClick={this.props.addNewRecipe}>{ modalButton }</button>
             <button className="modalButton closeButton" onClick={this.closeModal}>Close</button>
           </div>
 
@@ -225,11 +278,6 @@ class Modal extends Component {
 }
 
 class Container extends Component {
-  constructor(props, context) {
-    super(props, context)
-
-  }
-
   render() {
     return (
       <div className="container">

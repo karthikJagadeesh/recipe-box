@@ -89,18 +89,27 @@
 	var Button = function (_Component2) {
 	  _inherits(Button, _Component2);
 
-	  function Button() {
+	  function Button(props, context) {
 	    _classCallCheck(this, Button);
 
-	    return _possibleConstructorReturn(this, (Button.__proto__ || Object.getPrototypeOf(Button)).apply(this, arguments));
+	    var _this2 = _possibleConstructorReturn(this, (Button.__proto__ || Object.getPrototypeOf(Button)).call(this, props, context));
+
+	    _this2.showModal = _this2.showModal.bind(_this2);
+	    return _this2;
 	  }
 
 	  _createClass(Button, [{
+	    key: 'showModal',
+	    value: function showModal() {
+	      var modal = document.getElementById('modal');
+	      modal.style.display = 'block';
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      return _react2.default.createElement(
 	        'button',
-	        { className: 'button' },
+	        { onClick: this.showModal, className: 'button' },
 	        'Add Recipe ',
 	        _react2.default.createElement('i', { className: 'fa fa-plus' })
 	      );
@@ -113,13 +122,27 @@
 	var RecipeDescription = function (_Component3) {
 	  _inherits(RecipeDescription, _Component3);
 
-	  function RecipeDescription() {
+	  function RecipeDescription(props, context) {
 	    _classCallCheck(this, RecipeDescription);
 
-	    return _possibleConstructorReturn(this, (RecipeDescription.__proto__ || Object.getPrototypeOf(RecipeDescription)).apply(this, arguments));
+	    var _this3 = _possibleConstructorReturn(this, (RecipeDescription.__proto__ || Object.getPrototypeOf(RecipeDescription)).call(this, props, context));
+
+	    _this3.handleDeleteClick = _this3.handleDeleteClick.bind(_this3);
+	    _this3.handleEditClick = _this3.handleEditClick.bind(_this3);
+	    return _this3;
 	  }
 
 	  _createClass(RecipeDescription, [{
+	    key: 'handleDeleteClick',
+	    value: function handleDeleteClick(e) {
+	      this.props.removeRecipe(e.currentTarget.dataset.id);
+	    }
+	  }, {
+	    key: 'handleEditClick',
+	    value: function handleEditClick(e) {
+	      this.props.editRecipe(e.currentTarget.dataset.id);
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      var styles = {
@@ -130,15 +153,11 @@
 	        boxShadow: '0 2px 2px rgba(0, 0, 0, 0.3)',
 	        textAlign: 'left',
 	        padding: '20px',
-	        display: 'block'
-	      };
-	      var hideStyle = {
-	        boxShadow: '0 2px 2px rgba(0, 0, 0, 0.3)',
-	        textAlign: 'left',
-	        padding: '20px',
-	        display: 'none'
+	        display: 'none',
+	        marginBottom: '10px'
 	      };
 
+	      displayStyle.display = this.props.showIngredients ? 'block' : 'none';
 	      var ingredients = this.props.ingredients.map(function (ingredient, index) {
 	        return _react2.default.createElement(
 	          'p',
@@ -161,12 +180,12 @@
 	          { style: { padding: '15px 0px' } },
 	          _react2.default.createElement(
 	            'button',
-	            { className: 'deleteEdit' },
+	            { className: 'deleteEdit', 'data-id': this.props.id, onClick: this.handleDeleteClick },
 	            'Delete'
 	          ),
 	          _react2.default.createElement(
 	            'button',
-	            { className: 'deleteEdit' },
+	            { className: 'deleteEdit', 'data-id': this.props.id, onClick: this.handleEditClick },
 	            'Edit'
 	          )
 	        )
@@ -185,15 +204,33 @@
 
 	    var _this4 = _possibleConstructorReturn(this, (Recipe.__proto__ || Object.getPrototypeOf(Recipe)).call(this, props, context));
 
-	    _this4.state = {};
+	    _this4.state = {
+	      id: ''
+	    };
 	    _this4.showDescription = _this4.showDescription.bind(_this4);
-	    var visible = false;
+	    _this4.removeRecipe = _this4.removeRecipe.bind(_this4);
+	    _this4.editRecipe = _this4.editRecipe.bind(_this4);
 	    return _this4;
 	  }
 
 	  _createClass(Recipe, [{
 	    key: 'showDescription',
-	    value: function showDescription() {}
+	    value: function showDescription(event) {
+	      this.setState({ id: event.currentTarget.dataset.id });
+	    }
+	  }, {
+	    key: 'removeRecipe',
+	    value: function removeRecipe(id) {
+	      var recipes = this.props.recipes.filter(function (recipe, index) {
+	        return id !== String(index);
+	      });
+	      this.props.afterDeleteRecipes(recipes);
+	    }
+	  }, {
+	    key: 'editRecipe',
+	    value: function editRecipe(id) {
+	      this.props.editRecipe(id);
+	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
@@ -202,13 +239,18 @@
 	      var recipeName = this.props.recipes.map(function (recipe, index) {
 	        return _react2.default.createElement(
 	          'div',
-	          { key: recipe.name },
+	          { key: index },
 	          _react2.default.createElement(
 	            'div',
-	            { className: 'recipe', onClick: _this5.showDescription },
+	            { 'data-id': index, className: 'recipe', onClick: _this5.showDescription },
 	            recipe.name
 	          ),
-	          _react2.default.createElement(RecipeDescription, { ingredients: recipe.ingredients })
+	          _react2.default.createElement(RecipeDescription, {
+	            editRecipe: _this5.editRecipe,
+	            id: _this5.state.id,
+	            showIngredients: _this5.state.id === String(index) ? true : false,
+	            ingredients: recipe.ingredients,
+	            removeRecipe: _this5.removeRecipe })
 	        );
 	      });
 	      return _react2.default.createElement(
@@ -239,18 +281,112 @@
 	      }, {
 	        name: 'Milkshake',
 	        ingredients: ['Milk', 'Sugar', 'Water', 'Powder']
-	      }]
+	      }, {
+	        name: 'Lemon Juice',
+	        ingredients: ['Lemon', 'Sugar', 'Water']
+	      }],
+	      recipeName: '',
+	      ingredients: '',
+	      status: true,
+	      recipeID: ''
 	    };
+
+	    _this6.addNewRecipe = _this6.addNewRecipe.bind(_this6);
+	    _this6.handleRecipeNameChange = _this6.handleRecipeNameChange.bind(_this6);
+	    _this6.handleIngredientsChange = _this6.handleIngredientsChange.bind(_this6);
+	    _this6.afterDeleteRecipes = _this6.afterDeleteRecipes.bind(_this6);
+	    _this6.editRecipe = _this6.editRecipe.bind(_this6);
 	    return _this6;
 	  }
 
 	  _createClass(RecipeBox, [{
+	    key: 'handleRecipeNameChange',
+	    value: function handleRecipeNameChange(value) {
+	      this.setState({
+	        recipeName: value
+	      });
+	    }
+	  }, {
+	    key: 'handleIngredientsChange',
+	    value: function handleIngredientsChange(value) {
+	      this.setState({
+	        ingredients: value
+	      });
+	    }
+	  }, {
+	    key: 'afterDeleteRecipes',
+	    value: function afterDeleteRecipes(newRecipes) {
+	      this.setState({
+	        recipes: newRecipes
+	      });
+	    }
+	  }, {
+	    key: 'editRecipe',
+	    value: function editRecipe(id) {
+	      var item = this.state.recipes.filter(function (recipe, index) {
+	        return index === Number(id);
+	      })[0];
+	      document.getElementById('modal').style.display = 'block';
+	      this.setState({
+	        recipeName: item.name,
+	        ingredients: item.ingredients.join(', '),
+	        status: false,
+	        recipeID: id
+	      });
+	    }
+	  }, {
+	    key: 'addNewRecipe',
+	    value: function addNewRecipe() {
+	      var _this7 = this;
+
+	      var recipeIngredients = this.state.ingredients.split(',').map(function (ingredient) {
+	        return ingredient.trim();
+	      });
+	      var recipeName = this.state.recipeName.trim();
+
+	      if (this.state.status) {
+	        this.setState({
+	          recipes: this.state.recipes.concat({
+	            name: recipeName,
+	            ingredients: recipeIngredients
+	          }),
+	          recipeName: '',
+	          ingredients: ''
+	        });
+	      } else {
+	        var newRecipes = this.state.recipes.map(function (recipe, index) {
+	          if (index === Number(_this7.state.recipeID)) return {
+	            name: recipeName,
+	            ingredients: recipeIngredients
+	          };
+	        });
+
+	        console.log(newRecipes);
+
+	        this.setState({
+	          status: true,
+	          recipes: newRecipes,
+	          recipeName: '',
+	          ingredients: ''
+	        });
+	      }
+
+	      document.getElementById('modal').style.display = 'none';
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'recipeBox' },
-	        _react2.default.createElement(Recipe, { recipes: this.state.recipes })
+	        _react2.default.createElement(Recipe, { editRecipe: this.editRecipe, afterDeleteRecipes: this.afterDeleteRecipes, recipes: this.state.recipes }),
+	        _react2.default.createElement(Modal, {
+	          status: this.state.status,
+	          handleRecipeNameChange: this.handleRecipeNameChange,
+	          handleIngredientsChange: this.handleIngredientsChange,
+	          addNewRecipe: this.addNewRecipe,
+	          recipeName: this.state.recipeName,
+	          recipeIngredients: this.state.ingredients })
 	      );
 	    }
 	  }]);
@@ -258,8 +394,113 @@
 	  return RecipeBox;
 	}(_react.Component);
 
-	var Container = function (_Component6) {
-	  _inherits(Container, _Component6);
+	var Modal = function (_Component6) {
+	  _inherits(Modal, _Component6);
+
+	  function Modal(props, context) {
+	    _classCallCheck(this, Modal);
+
+	    var _this8 = _possibleConstructorReturn(this, (Modal.__proto__ || Object.getPrototypeOf(Modal)).call(this, props, context));
+
+	    _this8.closeModal = _this8.closeModal.bind(_this8);
+	    _this8.handleIngredientsChange = _this8.handleIngredientsChange.bind(_this8);
+	    _this8.handleRecipeNameChange = _this8.handleRecipeNameChange.bind(_this8);
+
+	    return _this8;
+	  }
+
+	  _createClass(Modal, [{
+	    key: 'closeModal',
+	    value: function closeModal() {
+	      var modal = document.getElementById('modal');
+	      modal.style.display = 'none';
+	    }
+	  }, {
+	    key: 'handleRecipeNameChange',
+	    value: function handleRecipeNameChange() {
+	      var name = this.refs.recipeName.value;
+	      this.props.handleRecipeNameChange(name);
+	    }
+	  }, {
+	    key: 'handleIngredientsChange',
+	    value: function handleIngredientsChange() {
+	      var ingredients = this.refs.ingredients.value;
+	      this.props.handleIngredientsChange(ingredients);
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var modalName = this.props.status ? 'Add a Recipe' : 'Edit Recipe';
+	      var modalButton = this.props.status ? 'Add Recipe' : 'Edit Recipe';
+
+	      return _react2.default.createElement(
+	        'div',
+	        { id: 'modal', className: 'modal' },
+	        _react2.default.createElement(
+	          'div',
+	          { id: 'modalContent', className: 'modalContent' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'modalHeader' },
+	            _react2.default.createElement(
+	              'h3',
+	              null,
+	              modalName,
+	              _react2.default.createElement(
+	                'span',
+	                { onClick: this.closeModal, className: 'close' },
+	                _react2.default.createElement('i', { className: 'fa fa-times' })
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'modalBody' },
+	            _react2.default.createElement(
+	              'label',
+	              null,
+	              'Recipe'
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'modalInput recipeInputBox' },
+	              _react2.default.createElement('input', { value: this.props.recipeName, ref: 'recipeName', onChange: this.handleRecipeNameChange, className: 'inputBox', type: 'text', placeholder: 'Recipe Name' })
+	            ),
+	            _react2.default.createElement(
+	              'label',
+	              null,
+	              'Ingredients'
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'modalInput' },
+	              _react2.default.createElement('textarea', { value: this.props.recipeIngredients, ref: 'ingredients', onChange: this.handleIngredientsChange, className: 'inputBox', placeholder: 'Enter Ingredients seperated by commas' })
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'modalFooter' },
+	            _react2.default.createElement(
+	              'button',
+	              { className: 'modalButton addRecipeButton', onClick: this.props.addNewRecipe },
+	              modalButton
+	            ),
+	            _react2.default.createElement(
+	              'button',
+	              { className: 'modalButton closeButton', onClick: this.closeModal },
+	              'Close'
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }]);
+
+	  return Modal;
+	}(_react.Component);
+
+	var Container = function (_Component7) {
+	  _inherits(Container, _Component7);
 
 	  function Container() {
 	    _classCallCheck(this, Container);
@@ -282,8 +523,8 @@
 	  return Container;
 	}(_react.Component);
 
-	var App = function (_Component7) {
-	  _inherits(App, _Component7);
+	var App = function (_Component8) {
+	  _inherits(App, _Component8);
 
 	  function App() {
 	    _classCallCheck(this, App);

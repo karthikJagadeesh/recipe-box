@@ -31,6 +31,8 @@
         color: #eee;
         font-size: 25px;
         font-family: 'Karla', helvetica, sans-serif;
+        cursor: pointer;
+        margin-bottom: 20px;
       }
       .button:hover {
         background: linear-gradient(to right, #4BA68C, #007575);
@@ -57,11 +59,13 @@
         cursor: pointer;
         user-select: none;
         box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
+        margin-bottom: 10px;
       }
       .recipe:hover {
         background: rgba(246, 205, 97, 0.5);
       }
       .deleteEdit {
+        cursor: pointer;
         padding: 10px;
         margin-right: 10px;
         background: #D33257;
@@ -79,12 +83,128 @@
       .deleteEdit:active {
         box-shadow: none;
       }
-
+      .ingredients-on {
+        box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
+        text-align: left;
+        padding: 20px;
+        display: block;
+        margin-bottom: 10px;
+      }
+      .ingredients-off {
+        box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
+        text-align: left;
+        padding: 20px;
+        display: none;
+        margin-bottom: 10px;
+      }
+      .modal {
+        background: rgba(0, 0, 0, 0.6);
+        height: 100%;
+        width: 100%;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        position: fixed;
+        display: none;
+      }
+      .modalContent {
+        font-family: 'Karla', helvetica, sans-serif;
+        background: white;
+        padding: 10px;
+        box-shadow: 0px 5px 8px rgba(0, 0, 0, 0.5);
+        border-radius: 5px;
+        width: 40%;
+        margin: 6% auto;
+      }
+      .modalHeader {
+        padding-left: 10px;
+        text-align: left;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+      }
+      .fa-times {
+        float: right;
+        margin-right: 10px;
+      }
+      .modalBody {
+        padding: 20px 10px;
+        text-align: left;
+      }
+      .modalInput {
+        padding: 5px 0px 10px 0px;
+      }
+      .inputBox {
+        padding: 10px 20px;
+        font-family: 'Karla', helvetica, sans-serif;
+        font-size: 16px;
+        width: 90%;
+        color: rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        resize: vertical;
+      }
+      .modalButton {
+        padding: 10px;
+        border-radius: 5px;
+        border: none;
+        outline: none;
+        margin-left: 10px;
+        font-size: 15px;
+      }
+      .addRecipeButton {
+        background: linear-gradient(to right, #64DDBB, #00B5B5);
+        color: #eee;
+        box-shadow: 2px 3px 0px rgba(0, 0, 0, 0.3);
+        cursor: pointer;
+      }
+      .addRecipeButton:hover {
+        background: linear-gradient(to right, #4BA68C, #007575);
+      }
+      .addRecipeButton:active {
+        box-shadow: none;
+        background: linear-gradient(to right, #4BA68C, #007575);
+      }
+      .closeButton {
+        background: #D33257;
+        box-shadow: 2px 3px 0px rgba(0, 0, 0, 0.3);
+        color: #eee;
+        cursor: pointer;
+      }
+      .closeButton:hover {
+        background: #913349;
+      }
+      .closeButton:active {
+        box-shadow: none;
+      }
+      .modalFooter {
+        border-top: 1px solid rgba(0, 0, 0, 0.2);
+        padding: 20px 0 10px 0px;
+        text-align: left;
+      }
+      .recipeInputBox {
+        margin-bottom: 10px;
+      }
+      .close {
+        cursor: pointer;
+      }
+      @media all and (max-width:1200px) {
+        .modalContent {
+          width: 60%;
+          margin: 6% auto;
+        }
+      }
+      @media all and (max-width:800px) {
+        .modalContent {
+          width: 90%;
+          margin: 2% auto;
+        }
+        .modalButton {
+          font-size: 18px;
+        }
+      }
     </style>
   </head>
   <body>
     <div id="app">
 
     </div>
-  </body>
+  <script type="text/javascript" src="bundle.js"></script></body>
 </html>
