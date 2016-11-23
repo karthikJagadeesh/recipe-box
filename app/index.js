@@ -24,6 +24,15 @@ class Button extends Component {
 }
 
 class RecipeDescription extends Component {
+  constructor(props, context) {
+    super(props, context)
+    this.handleDeleteClick = this.handleDeleteClick.bind(this)
+  }
+
+  handleDeleteClick(e) {
+    this.props.removeRecipe(e.currentTarget.dataset.id)
+  }
+
   render() {
     const styles = {
       borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
@@ -45,7 +54,7 @@ class RecipeDescription extends Component {
         <h3 style={{textAlign: 'center', borderBottom: '1px solid rgba(0, 0, 0, 0.1)', paddingBottom: '10px'}}>Ingredients</h3>
         { ingredients }
         <div style={{padding: '15px 0px'}}>
-          <button className="deleteEdit">Delete</button>
+          <button className="deleteEdit" data-id={this.props.id} onClick={this.handleDeleteClick}>Delete</button>
           <button className="deleteEdit">Edit</button>
         </div>
       </div>
@@ -60,11 +69,17 @@ class Recipe extends Component {
       id: ''
     }
     this.showDescription = this.showDescription.bind(this)
+    this.removeRecipe = this.removeRecipe.bind(this)
   }
 
   showDescription(event) {
     this.setState({ id: event.currentTarget.dataset.id })
   };
+
+  removeRecipe(id) {
+    const recipes = this.props.recipes.filter((recipe, index) => id !== String(index))
+    this.props.afterDeleteRecipes(recipes)
+  }
 
   render() {
     let recipeName = this.props.recipes.map((recipe, index) => (
@@ -72,7 +87,11 @@ class Recipe extends Component {
         <div data-id={index} className="recipe" onClick={this.showDescription}>
           { recipe.name }
         </div>
-        <RecipeDescription showIngredients={(this.state.id === String(index)) ? true : false} ingredients={recipe.ingredients}/>
+        <RecipeDescription
+          id={this.state.id}
+          showIngredients={(this.state.id === String(index)) ? true : false}
+          ingredients={recipe.ingredients}
+          removeRecipe={this.removeRecipe}/>
       </div>
     ))
     return <div> { recipeName } </div>
@@ -102,6 +121,7 @@ class RecipeBox extends Component {
     this.addNewRecipe = this.addNewRecipe.bind(this)
     this.handleRecipeNameChange = this.handleRecipeNameChange.bind(this)
     this.handleIngredientsChange = this.handleIngredientsChange.bind(this)
+    this.afterDeleteRecipes = this.afterDeleteRecipes.bind(this)
   }
 
   handleRecipeNameChange(value) {
@@ -113,6 +133,12 @@ class RecipeBox extends Component {
   handleIngredientsChange(value) {
     this.setState({
       ingredients: value
+    })
+  }
+
+  afterDeleteRecipes(newRecipes) {
+    this.setState({
+      recipes: newRecipes
     })
   }
 
@@ -134,7 +160,7 @@ class RecipeBox extends Component {
   render() {
     return (
       <div className="recipeBox">
-        <Recipe recipes={this.state.recipes} />
+        <Recipe afterDeleteRecipes={this.afterDeleteRecipes} recipes={this.state.recipes} />
         <Modal
           handleRecipeNameChange={this.handleRecipeNameChange}
           handleIngredientsChange={this.handleIngredientsChange}
